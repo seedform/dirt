@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id      String   @id // Auth0 `sub`, not DB-generated
+  email   String   @unique
+  name    String
+  surveys Survey[]
+}
+
+model Survey {
+  id          String       @id @default(uuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  createdAt   DateTime     @default(now())
+  submissions Submission[]
+}
+
+// No user-identifying fields here — submissions must remain anonymous.
+model Submission {
+  id                  String   @id @default(uuid())
+  surveyId            String
+  survey              Survey   @relation(fields: [surveyId], references: [id])
+  dietaryRestrictions Json
+  createdAt           DateTime @default(now())
+}
