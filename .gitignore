@@ -45,3 +45,10 @@ next-env.d.ts
 # prisma
 /dev.db
 *.db-journal
+
+# Auth0 credentials
+.env
+
+.auth0-mcp-state.json
+
+.auth0-mcp-writes.log
