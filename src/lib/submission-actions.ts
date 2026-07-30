@@ -5,12 +5,13 @@ import { prisma } from "@/lib/prisma";
 import { normalizeWithGemini } from "@/lib/gemini";
 
 // Fed to a lightweight LLM downstream, so entries are restricted to
-// [ a-z0-9] only — this also doubles as prompt-injection sanitization.
+// [ a-z0-9-] only — this also doubles as prompt-injection sanitization.
 function sanitizeDietaryRestriction(raw: string): string {
   return raw
     .toLowerCase()
-    .replace(/[^a-z0-9 ]/g, "")
+    .replace(/[^a-z0-9 -]/g, "")
     .replace(/\s+/g, " ")
+    .replace(/-+/g, "-")
     .trim();
 }
 
