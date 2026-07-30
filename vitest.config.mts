@@ -9,7 +9,7 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     coverage: {
       provider: "v8",
-      reporter: ["text", "html", "lcov"],
+      reporter: ["text", "html", "lcov", "json"],
       include: ["src/**/*.{ts,tsx}"],
       exclude: ["src/generated/**", "src/**/*.d.ts"],
     },
