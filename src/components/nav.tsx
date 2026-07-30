@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { buttonVariants } from "@/components/ui/button";
@@ -10,8 +11,8 @@ export function Nav() {
 
   return (
     <header className="flex items-center justify-between border-b border-border px-6 py-4">
-      <Link href="/" className="text-sm font-semibold text-foreground">
-        dirt
+      <Link href="/" className="flex items-center">
+        <Image src="/app.svg" alt="App logo" width={28} height={28} priority />
       </Link>
       {!isLoading && (
         <div className="flex items-center gap-3">
