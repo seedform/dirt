@@ -1,5 +1,5 @@
 import { auth0 } from "@/lib/auth0";
-import { createSurveyAction, getDashboardData, getSurveyLink } from "@/lib/actions";
+import { createSurveyAction, getDashboardData } from "@/lib/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -8,9 +8,8 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
-import { CopyLinkButton } from "@/components/copy-link-button";
+import { SurveyItem } from "@/components/survey-item";
 
 export default auth0.withPageAuthRequired(
   async function DashboardPage() {
@@ -22,56 +21,42 @@ export default auth0.withPageAuthRequired(
       <div className="flex flex-1 flex-col items-center gap-6 p-6">
         <p className="text-lg text-muted-foreground">Logged in as {user.email}</p>
 
-        {data.survey === null ? (
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>New survey</CardTitle>
+            <CardDescription>
+              Generate a unique link to start collecting dietary restriction submissions for a
+              team.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form action={createSurveyAction} className="flex items-center gap-2">
+              <Input
+                name="teamName"
+                placeholder="Team name"
+                required
+                className="flex-1"
+              />
+              <Button type="submit">Generate Link</Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        {data.surveys.length === 0 ? (
           <Card className="w-full max-w-md">
             <CardHeader>
-              <CardTitle>No survey yet</CardTitle>
+              <CardTitle>No surveys yet</CardTitle>
               <CardDescription>
-                Generate a unique link to start collecting dietary restriction submissions.
+                Create your first survey above to get started.
               </CardDescription>
             </CardHeader>
-            <CardFooter className="justify-end">
-              <form action={createSurveyAction}>
-                <Button type="submit">Generate Survey Link</Button>
-              </form>
-            </CardFooter>
           </Card>
         ) : (
-          <>
-            <Card className="w-full max-w-md">
-              <CardHeader>
-                <CardTitle>Your survey link</CardTitle>
-                <CardDescription>Share this link to collect submissions.</CardDescription>
-              </CardHeader>
-              <CardContent className="flex items-center gap-2">
-                <Input readOnly value={getSurveyLink(data.survey.id)} className="flex-1" />
-                <CopyLinkButton link={getSurveyLink(data.survey.id)} />
-              </CardContent>
-            </Card>
-
-            <Card className="w-full max-w-md">
-              <CardHeader>
-                <CardTitle>Dietary restriction summary</CardTitle>
-                <CardDescription>
-                  {data.totalSubmissions} submission{data.totalSubmissions === 1 ? "" : "s"}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {data.aggregation.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No submissions yet.</p>
-                ) : (
-                  <ul className="flex flex-col gap-1.5">
-                    {data.aggregation.map((item) => (
-                      <li key={item.label} className="flex items-center justify-between text-sm">
-                        <span>{item.label}</span>
-                        <span className="font-medium">{item.count}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </CardContent>
-            </Card>
-          </>
+          <div className="flex w-full max-w-md flex-col gap-3">
+            {data.surveys.map((survey) => (
+              <SurveyItem key={survey.id} survey={survey} />
+            ))}
+          </div>
         )}
       </div>
     );

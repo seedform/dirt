@@ -21,6 +21,7 @@ model Survey {
   id          String       @id @default(uuid())
   userId      String
   user        User         @relation(fields: [userId], references: [id])
+  teamName    String
   createdAt   DateTime     @default(now())
   submissions Submission[]
 }

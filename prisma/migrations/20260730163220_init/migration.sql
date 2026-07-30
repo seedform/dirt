@@ -11,6 +11,7 @@ CREATE TABLE "User" (
 CREATE TABLE "Survey" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
+    "teamName" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Survey_pkey" PRIMARY KEY ("id")
