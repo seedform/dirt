@@ -3,6 +3,8 @@ DiRT
 
 Dietary Restrictions Tracking App for Teams
 
+[Live demo here](https://dirt-91js.onrender.com/)
+
 
 ## Features
 
