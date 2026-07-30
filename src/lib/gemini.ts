@@ -5,6 +5,7 @@ import { GoogleGenAI } from "@google/genai";
 const ai = new GoogleGenAI({});
 
 const GEMINI_MODEL = "gemini-3.5-flash-lite";
+const GEMINI_TIMEOUT_MS = 30_000;
 
 const DIETARY_RESTRICTION_SYSTEM_PROMPT = `You are a strict, automated text-normalization pipeline.
 
@@ -44,7 +45,7 @@ export async function normalizeWithGemini(rawItems: string[]): Promise<string[]>
       contents: input,
       config: {
         systemInstruction: DIETARY_RESTRICTION_SYSTEM_PROMPT,
-        abortSignal: AbortSignal.timeout(8_000),
+        abortSignal: AbortSignal.timeout(GEMINI_TIMEOUT_MS),
       },
     });
     text = response.text;
