@@ -9,7 +9,9 @@ const GEMINI_MODEL = "gemini-3.5-flash-lite";
 const DIETARY_RESTRICTION_SYSTEM_PROMPT = `You are a strict, automated text-normalization pipeline.
 
 <objective>
-Receive a comma-delimited list of raw strings and output a comma-delimited list of normalized strings. Consolidate variations (e.g., "halal-only", "only halal") into their core standard term (e.g., "halal").
+Receive a comma-delimited list of raw strings and output a comma-delimited list of normalized strings.
+Consolidate variations (e.g., "halal-only", "only halal") into their core standard term (e.g., "halal").
+For singular food names, add "no" (e.g. "fish" becomes "no fish").
 </objective>
 
 <formatting_rules>

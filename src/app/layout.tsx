@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Auth0Provider } from "@auth0/nextjs-auth0/client";
 import { auth0 } from "@/lib/auth0";
 import { Nav } from "@/components/nav";
+import { Toaster } from "@/components/ui/toast";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -37,6 +38,7 @@ export default async function RootLayout({
           <Nav />
           {children}
         </Auth0Provider>
+        <Toaster />
       </body>
     </html>
   );

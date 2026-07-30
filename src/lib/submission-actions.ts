@@ -14,7 +14,12 @@ function sanitizeDietaryRestriction(raw: string): string {
     .trim();
 }
 
-export async function createSubmissionAction(formData: FormData): Promise<void> {
+export type SubmissionState = { error: string | null };
+
+export async function createSubmissionAction(
+  _prevState: SubmissionState,
+  formData: FormData
+): Promise<SubmissionState> {
   const surveyId = String(formData.get("surveyId") ?? "");
 
   // Server Actions are reachable via direct POST regardless of UI gating,
@@ -37,8 +42,18 @@ export async function createSubmissionAction(formData: FormData): Promise<void> 
   // Semantic normalization + prompt-injection screening via Gemini. Skipped
   // when there's nothing to sanitize. Output item count may be lower than
   // input (consolidation/dropped-invalid), so treat it as a new unordered
-  // candidate list, not positionally mapped to the originals.
-  const candidates = rawItems.length > 0 ? await normalizeWithGemini(rawItems) : [];
+  // candidate list, not positionally mapped to the originals. A Gemini
+  // request failure is an expected error (external API flake/timeout), so
+  // it's modeled as a returned state rather than a thrown exception.
+  let candidates: string[] = [];
+  if (rawItems.length > 0) {
+    try {
+      candidates = await normalizeWithGemini(rawItems);
+    } catch (err) {
+      console.error(err);
+      return { error: "Submission failed" };
+    }
+  }
 
   // Sanitize/normalize/dedupe, then re-enforce the entry-count and
   // per-entry length limits server-side (the client tag input only
